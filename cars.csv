@@ -5,7 +5,7 @@ Honda S800 Racing,2024,209/250,Yellow,true
 Porsche 904 Carrera GTS,2024,158/25,Red,false
 Volkswagen SP2,2019,119/250,Metallic Pale Yellow,false
 Dodge '70 Charger R/T,2024,108/250,Metalflake Pink,false
-1977 Jaguar XJ6C,Matchbox,false
+1977 Jaguar XJ6C,Matchbox,Blue,false
 '87 Audi Quattro,2024,102/250,Black,false
 Alfa Romeo GTV6 3.0,2024,98/250,Metalflake Blu Atollo,false
 Lotus Spirit S1,2024,Multipack,Metalflake Silver,false
@@ -35,7 +35,7 @@ Corvette C6 Convertible,2024,40/250,Yellow,false
 2015 Jaguar F-Type Project 7,2024,116/250,Magenta,false
 '91 Mazda MX-5 Miata,2024,120/250,Yellow,false
 '92 Dodge Viper RT/10,2024,218/250,Yellow,false
-2016 Chevy Camaro Convertible,2024,Matchbox,false
+2016 Chevy Camaro Convertible,2024,Matchbox,,false
 BMW i8 Roadster,2023,156/250,Ionic Silver,true
 '71 Lamborghini Miura SV,2022,202/250,Arancio Miura,false
 Gordon Murray Automotive T.50s,2024,235/25,Metalflake Orange,false
@@ -55,7 +55,7 @@ McLaren F1,2024,243/250,Grand Prix Red,false
 Pagani Zonda R,2024,99/250,Giallo Ginevra,false
 Bugatti Bolide,2024,185/250,Red,false
 Aston Martin Vantage GTE,2024,HW Motor Show 5-Pack,Yellow,false
-Corvette C8.Rm 2024,HW Motor Show 5-Pack,Blue,false
+Corvette C8.Rm 2024,HW Motor Show 5-Pack,,Blue,false
 McLaren Senna,2024,HW Motor Show 5-Pack,Abyss Black,false
 2016 Lamborghini Centenario Roadster,2024,Multipack,Light Blue,false
 Lamborghini Huracan Sterrato,2025,42/250,Bianco Asopo,false
@@ -167,3 +167,9 @@ Porsche 911 Turbo Cabriolet,2025,239/250,Black,false
 BMW M1 Procar,2025,The Hot Ones,Spectraflame Blue,false
 Porsche 917 LH,2025,The Hot Ones,Spectraflame Gold,false
 Ferrari 499P,2021,14/10 Scale,Red,false
+Ferrari SF90 Stradale,2025,191/250,Metalflake Grigio Silverstone,false
+Ferrari SF90 Stradale,2026,41/250,Blu Tour de France,false
+McLaren Speedtail,2025,209/250,Volcano Red,false
+Custom '18 Ford Mustang GT,2025,211/250,Blue,false
+BMW 635 CSi,2025,185/250,Orange,false
+McMurty Spéirling,2026,25/250,Clearcoat Blue,false
