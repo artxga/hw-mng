@@ -1,4 +1,5 @@
 export interface Car {
+  id?: number;
   model: string;
   year: string;
   col_or_serie: string;

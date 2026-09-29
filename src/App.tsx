@@ -1,44 +1,78 @@
 import { useEffect, useState, useMemo } from 'react';
-import Papa from 'papaparse';
-import { Search, Car as CarIcon, Calendar, Hash, Palette, Filter, PackageOpen } from 'lucide-react';
+import { Search, Calendar, Hash, Palette, Filter, PackageOpen, Plus, Trash2, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getBrand, type Car } from './types';
 import './App.css';
+
+const API_URL = 'http://localhost:3000/api/cars';
 
 function App() {
   const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [brandFilter, setBrandFilter] = useState('All');
+  const [showAddModal, setShowAddModal] = useState(false);
+  
+  // New Car Form State
+  const [newCar, setNewCar] = useState<Partial<Car>>({
+    model: '', year: '', col_or_serie: '', color: '', used: 'false', notes: ''
+  });
+
+  const loadData = async () => {
+    try {
+      const response = await fetch(API_URL);
+      const data: Car[] = await response.json();
+      
+      const parsedCars = data
+        .filter(c => c.model)
+        .map(c => ({
+          ...c,
+          brand: getBrand(c.model)
+        }));
+      setCars(parsedCars);
+    } catch (error) {
+      console.error("Failed to load cars", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        const response = await fetch('/cars.csv');
-        const csvText = await response.text();
-        
-        Papa.parse<Car>(csvText, {
-          header: true,
-          skipEmptyLines: true,
-          complete: (results) => {
-            const parsedCars = results.data
-              .filter(c => c.model)
-              .map(c => ({
-                ...c,
-                brand: getBrand(c.model)
-              }));
-            setCars(parsedCars);
-            setLoading(false);
-          }
-        });
-      } catch (error) {
-        console.error("Failed to load cars", error);
-        setLoading(false);
-      }
-    };
-    
     loadData();
   }, []);
+
+  const handleDelete = async (id?: number) => {
+    if (id === undefined) return;
+    if (!confirm('Are you sure you want to delete this car?')) return;
+    
+    try {
+      await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+      setCars(prev => prev.filter(c => c.id !== id));
+    } catch (err) {
+      console.error('Failed to delete', err);
+    }
+  };
+
+  const handleAdd = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newCar.model) return;
+    
+    try {
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newCar)
+      });
+      const addedCar = await response.json();
+      addedCar.brand = getBrand(addedCar.model);
+      
+      setCars(prev => [...prev, addedCar]);
+      setShowAddModal(false);
+      setNewCar({ model: '', year: '', col_or_serie: '', color: '', used: 'false', notes: '' });
+    } catch (err) {
+      console.error('Failed to add car', err);
+    }
+  };
 
   const brands = useMemo(() => {
     const brandSet = new Set(cars.map(c => c.brand));
@@ -135,6 +169,10 @@ function App() {
             ))}
           </select>
         </div>
+        
+        <button className="btn btn-primary" onClick={() => setShowAddModal(true)}>
+          <Plus size={18} /> Add Car
+        </button>
       </motion.div>
 
       {filteredCars.length === 0 ? (
@@ -151,20 +189,28 @@ function App() {
           <AnimatePresence>
             {filteredCars.map((car, idx) => (
               <motion.div
-                key={`${car.model}-${idx}`}
+                key={car.id !== undefined ? car.id : `${car.model}-${idx}`}
                 layout
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.2 }}
-                className="panel car-card"
+                className="panel car-card group"
               >
                 <div className={`status-badge ${car.used?.toLowerCase() === 'true' ? 'status-photographed' : 'status-pending'}`}>
                   {car.used?.toLowerCase() === 'true' ? '📸 Photographed' : '📷 Pending Photo'}
                 </div>
                 
+                <button 
+                  onClick={() => handleDelete(car.id)} 
+                  className="delete-btn"
+                  title="Delete Car"
+                >
+                  <Trash2 size={16} />
+                </button>
+                
                 <div className="car-header">
-                  <div className="car-model pr-12">{car.model}</div>
+                  <div className="car-model">{car.model}</div>
                 </div>
                 
                 <div className="car-badges">
@@ -197,6 +243,69 @@ function App() {
           </AnimatePresence>
         </motion.div>
       )}
+
+      {/* Add Modal */}
+      <AnimatePresence>
+        {showAddModal && (
+          <motion.div 
+            className="modal-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div 
+              className="modal-content panel"
+              initial={{ y: 50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 50, opacity: 0 }}
+            >
+              <div className="modal-header">
+                <h3>Add New Car</h3>
+                <button className="icon-btn" onClick={() => setShowAddModal(false)}>
+                  <X size={20} />
+                </button>
+              </div>
+              <form onSubmit={handleAdd} className="modal-body">
+                <div className="form-group">
+                  <label>Model Name *</label>
+                  <input required type="text" className="input-field" value={newCar.model} onChange={e => setNewCar({...newCar, model: e.target.value})} placeholder="e.g. '67 Ford Mustang" />
+                </div>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Year</label>
+                    <input type="text" className="input-field" value={newCar.year} onChange={e => setNewCar({...newCar, year: e.target.value})} placeholder="e.g. 2025" />
+                  </div>
+                  <div className="form-group">
+                    <label>Col / Serie</label>
+                    <input type="text" className="input-field" value={newCar.col_or_serie} onChange={e => setNewCar({...newCar, col_or_serie: e.target.value})} placeholder="e.g. 122/250" />
+                  </div>
+                </div>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Color</label>
+                    <input type="text" className="input-field" value={newCar.color} onChange={e => setNewCar({...newCar, color: e.target.value})} placeholder="e.g. Metalflake Blue" />
+                  </div>
+                  <div className="form-group">
+                    <label>Photographed?</label>
+                    <select className="input-field" value={newCar.used} onChange={e => setNewCar({...newCar, used: e.target.value})}>
+                      <option value="false">No (Pending)</option>
+                      <option value="true">Yes</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label>Notes</label>
+                  <input type="text" className="input-field" value={newCar.notes} onChange={e => setNewCar({...newCar, notes: e.target.value})} placeholder="Any extra info..." />
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-outline" onClick={() => setShowAddModal(false)}>Cancel</button>
+                  <button type="submit" className="btn btn-primary">Save Car</button>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
