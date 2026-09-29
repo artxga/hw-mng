@@ -1,5 +1,5 @@
-const fs = require('fs');
-const csv = require('csv-parser');
+import fs from 'fs';
+import csv from 'csv-parser';
 
 const cars = [];
 const brandCount = {};  // Objeto para contar las marcas
