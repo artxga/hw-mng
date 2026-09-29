@@ -1,4 +1,4 @@
-model,year,col_or_serie,color,used
+model,year,col_or_serie,color,used,date_added,notes
 Shelby Cobra Daytona Coupe,2024,122/250,Metalflake Dark Blue,false
 Custom '53 Chevy,2025,12/250,Seafoam,false
 Honda S800 Racing,2024,209/250,Yellow,false
@@ -175,3 +175,9 @@ BMW 635 CSi,2025,185/250,Orange,false
 McMurty Spéirling,2026,25/250,Clearcoat Blue,false
 2024 Subaru WRX S4 STI,2025,31/125(matchbox)/,Blue,false
 Alfa Romeo Duetto,2025,60/125(matchbox),Red,false
+70 Dodge Hemi Challenger,2026,36/250,Goldenrod,false,2026,lulu
+'69 Copo Camaro,2022,193/250,Red,false,,Dennis
+BMW M1,2025,BMW 1/5,Inka Orange,false,Junio 2026,
+'98 Honda Prelude,2026,136/250,Black,false,Junio 2026,
+Custom '66 Toronado,2026,114/250,Autumn Bronze Metallic,false,Junio 2026,
+'84 Audi Sport Quattro,2025,246/250,Metalflake Silver,false,Julio 2026,
